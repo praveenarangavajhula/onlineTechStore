@@ -50,8 +50,9 @@
         </form>
           <ul class="nav navbar-nav navbar-right">
               <% if (user) { %>
-              <li><a href="/users/logout"><%= user.username %></a></li>
+              <li><a><%= user.username %></a></li>
               <li><a href="/users/logout">Sign Out</a></li>
+              <li><a href="/users/history">History</a></li>
               <% } else {%>
               <li><a href="/users/register">Register</a></li>
               <li><a href="/users/login">Sign In</a></li>

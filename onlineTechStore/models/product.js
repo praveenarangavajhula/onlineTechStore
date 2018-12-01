@@ -26,6 +26,12 @@ var ProductSchema = mongoose.Schema({
 	},
 	image : {
 		type : String
+	},
+	flag :
+	{
+		type : String,
+		
+
 	}
 });
 

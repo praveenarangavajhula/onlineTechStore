@@ -3,7 +3,7 @@ var router = express.Router();
 
 // Get Product model
 var Product = require('../models/product');
-
+var User = require('../models/user');
 
 router.get('/add/:product', function (req, res) {
 
@@ -51,7 +51,6 @@ router.get('/add/:product', function (req, res) {
 
 
 router.get('/checkout', function (req, res) {
-
     if (req.session.cart && req.session.cart.length == 0) {
         delete req.session.cart;
         res.redirect('/cart/checkout');
@@ -110,10 +109,22 @@ router.get('/clear', function (req, res) {
 
 
 router.get('/buynow', function (req, res) {
-
-    delete req.session.cart;
+    var user = req.user;
+    var cart = req.session.cart;
+    var items_purchased=[];
+      
+    if(cart)
+    {
+        for (var i = 0; i < cart.length; i++) {
+            if(user)
+            {
+            User.findByIdAndUpdate(req.user._id, { $addToSet: {items: Buffer.from(JSON.stringify(cart[i]))} },   function(err){  if(err){    console.log(err);  }});
+            }
+        }
+    }
+        delete req.session.cart;
     
-    res.sendStatus(200);
+    res.redirect('/');
 
 });
 

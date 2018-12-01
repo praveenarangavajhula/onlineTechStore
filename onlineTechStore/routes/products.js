@@ -41,11 +41,30 @@ router.get('/all', function (req, res) {
 });
 
 router.get('/all/:page', function(req, res, next) {
-    console.log("in pagination")
-    var perPage = 5
+    var perPage = 7
     var page = req.params.page || 1
+    if(req.query.search){
+        const regex = new RegExp(escapeRegExp(req.query.search),'gi');
+        Product
+        .find({title: regex})
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .exec(function(err, products) {
+            Product.count().exec(function(err, count) {
+                if (err) return next(err)
+                res.render('all_products', {
+                    title: "All products",
+                    products: products,
+                    current: page,
+                    search:true,
+                    pageLength: Math.ceil(count / perPage)
+                })
+            })
+        })
 
-    Product
+    }
+    else{
+        Product
         .find()
         .skip((perPage * page) - perPage)
         .limit(perPage)
@@ -56,10 +75,14 @@ router.get('/all/:page', function(req, res, next) {
                     title: "All products",
                     products: products,
                     current: page,
+                    search:false,
                     pageLength: Math.ceil(count / perPage)
                 })
             })
         })
+    }
+
+    
 });
 
 function escapeRegExp(text) {

@@ -106,9 +106,37 @@ router.post('/login', function (req, res, next) {
 router.get('/logout', function (req, res) {
 
     req.logout();
-    
     req.flash('success', 'You are logged out!');
     res.redirect('/users/login');
+
+});
+
+router.get('/history',function (req, res) {
+
+    var user = req.user;
+    if(user)
+    {
+    User.findById(req.user._id,   function(err, user)
+        {
+            history_items = []
+          if(err){    console.log(err);  }
+
+            else
+            {
+                for (var i = 0; i < user.items.length; i++) {
+                   history_items.push(JSON.parse(user.items[i]))
+                }
+
+                res.render('history', {
+            title: "History",
+            history: history_items
+        });
+            }
+        }).lean();
+
+
+    }
+
 
 });
 
