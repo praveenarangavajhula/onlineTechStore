@@ -29,7 +29,7 @@ router.post('/register', function (req, res) {
     req.checkBody('name', 'Name is required!').notEmpty();
     req.checkBody('email', 'Email is required!').isEmail();
     req.checkBody('username', 'Username is required!').notEmpty();
-    req.checkBody('password', 'Password is required!').notEmpty();
+    req.checkBody('password', 'Password is required - choose a minimum of 8 characters!').notEmpty().isLength({ min: 8, max:15 });;
     req.checkBody('password2', 'Passwords do not match!').equals(password);
 
     var errors = req.validationErrors();
